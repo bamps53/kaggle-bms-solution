@@ -157,14 +157,14 @@ class Encoder(tf.keras.Model):
             include_top=False, weights='noisy-student')
         self.reshape = tf.keras.layers.Reshape(
             [-1, self.d_model], name='reshape_featuere_maps')
-        self.pos_encoding_2d = positional_encoding_2d(
-            row_size, col_size, self.d_model, dtype_)
 
         self.embedding = tf.keras.layers.Dense(self.d_model, activation='relu')
         self.dropout = tf.keras.layers.Dropout(drop_rate)
 
         self.num_layers = num_layers
         if self.num_layers:
+            self.pos_encoding_2d = positional_encoding_2d(
+                row_size, col_size, self.d_model, dtype_)
             self.enc_layers = [EncoderLayer(
                 d_model, num_heads, dff, drop_rate) for _ in range(num_layers)]
 
