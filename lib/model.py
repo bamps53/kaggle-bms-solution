@@ -39,8 +39,8 @@ def positional_encoding_2d(row, col, d_model, dtype_):
     return tf.cast(pos_encoding, dtype=dtype_)
 
 
-def create_padding_mask(seq):
-    seq = tf.cast(tf.math.equal(seq, 0), seq.dtype)
+def create_padding_mask(seq, dtype_):
+    seq = tf.cast(tf.math.equal(seq, 0), dtype_)
     return seq[:, tf.newaxis, tf.newaxis, :]  # (batch_size, 1, 1, seq_len)
 
 
@@ -68,7 +68,7 @@ def scaled_dot_product_attention(q, k, v, mask):
 def create_decoder_mask(target, dtype_):
     seq_len = tf.shape(target)[1]
     look_ahead_mask = create_look_ahead_mask(seq_len, dtype_)
-    dec_target_padding_mask = create_padding_mask(target)
+    dec_target_padding_mask = create_padding_mask(target, dtype_)
     combined_mask = tf.maximum(dec_target_padding_mask, look_ahead_mask)
     return combined_mask
 
