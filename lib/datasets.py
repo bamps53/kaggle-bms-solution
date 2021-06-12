@@ -9,13 +9,13 @@ from tensorflow.keras.layers.experimental.preprocessing import RandomZoom
 AUTO = tf.data.experimental.AUTOTUNE
 
 GCS_PATHS = {
-    '300x600_no_pad': 'gs://kds-979a6e5e09f2e5daa41b272745a5724d0ba787f09b84bb30f25f81c5',
-    '300x600_no_pad_test': 'gs://kds-f2e338c5eaa7c880d3f99c69221f1fe1ca5f39c4fc9d91ac907af560',
-    '416x736_no_pad': 'gs://kds-1636aeb30aaca51ddfeec6cfa7a2339bf6f70968eb7a7d1efc8665f2',
-    '416x736_no_pad_noise_denoise': 'gs://kds-9a4900604f031e0764c4d8170125b0e8705bb09a846a634da16dd807',
-    '416x736_no_pad_test': 'gs://kds-d8a59fcdfcfe49b0c44db9c27d60f8f1f80f8233054c59f1f61e2c08',
-    '416x736_no_pad_noise_denoise_test': 'gs://kds-28668c53d609f95ef872b5c343ff79179b559925bd4ebf3e724b60c4',
-    '416x736_no_pad_pseudo060': 'gs://kds-be866cd81681c2f7d50550f36e017e72e2179f1f00be94bb2a6d0a41',
+    '300x600_no_pad': '',
+    '300x600_no_pad_test': '',
+    '416x736_no_pad': 'gs://kds-f090a95044a5e32eda53024e47ef1fe88853b522598a09272e887cc4',
+    '416x736_no_pad_noise_denoise': '',
+    '416x736_no_pad_test': '',
+    '416x736_no_pad_noise_denoise_test': '',
+    '416x736_no_pad_pseudo060': '',
 }
 
 

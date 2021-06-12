@@ -32,30 +32,30 @@ bms/input/bms-molecular-translation/
 
 ### 1-2.preprocess
 ```
-python 01_preprocess/create_folds.py
+python preprocess/create_folds.py
 ```
 
 ### 1-3.resize images
 ```
-python 01_preprocess/resize_train_images.py -h 300 -w 600
-python 01_preprocess/resize_train_images.py -h 416 -w 736
-python 01_preprocess/resize_train_images_noise_denoise.py -h 416 -w 736
+python preprocess/resize_train_images.py -h 300 -w 600
+python preprocess/resize_train_images.py -h 416 -w 736
+python preprocess/resize_train_images_noise_denoise.py -h 416 -w 736
 
-python 01_preprocess/resize_test_images.py -h 300 -w 600
-python 01_preprocess/resize_test_images.py -h 416 -w 736
-python 01_preprocess/resize_test_images_noise_denoise.py -h 416 -w 736
+python preprocess/resize_test_images.py -h 300 -w 600
+python preprocess/resize_test_images.py -h 416 -w 736
+python preprocess/resize_test_images_noise_denoise.py -h 416 -w 736
 
 ```
 
 ### 1-4.create tfrecords
 ```
-python 01_preprocess/create_train_tfrecords.py -d data/folds.csv -i data/resized300x600 -s data/tfrecords013
-python 01_preprocess/create_train_tfrecords.py -d data/folds.csv -i data/resized416x736 -s data/tfrecords018
-python 01_preprocess/create_train_tfrecords.py -d data/lb060.csv -i data/resized416x736 -s data/tfrecords031
-python 01_preprocess/create_train_tfrecords.py -d data/folds.csv -i data/resized416x736_noise_denoise -s data/tfrecords032
-python 01_preprocess/create_test_tfrecords.py -d ../input/bms-molecular-translation/sample_submission.csv -i data/resized300x600_test -s data/tfrecords016
-python 01_preprocess/create_test_tfrecords.py -d ../input/bms-molecular-translation/sample_submission.csv -i data/resized416x736_test -s data/tfrecords020
-python 01_preprocess/create_test_tfrecords.py -d ../input/bms-molecular-translation/sample_submission.csv -i data/resized416x736_noise_denoise_test -s data/tfrecords033
+python preprocess/create_train_tfrecords.py -d data/folds.csv -i data/resized300x600 -s data/tfrecords013
+python preprocess/create_train_tfrecords.py -d data/folds.csv -i data/resized416x736 -s data/tfrecords018
+python preprocess/create_train_tfrecords.py -d data/lb060.csv -i data/resized416x736 -s data/tfrecords031
+python preprocess/create_train_tfrecords.py -d data/folds.csv -i data/resized416x736_noise_denoise -s data/tfrecords032
+python preprocess/create_test_tfrecords.py -d ../input/bms-molecular-translation/sample_submission.csv -i data/resized300x600_test -s data/tfrecords016
+python preprocess/create_test_tfrecords.py -d ../input/bms-molecular-translation/sample_submission.csv -i data/resized416x736_test -s data/tfrecords020
+python preprocess/create_test_tfrecords.py -d ../input/bms-molecular-translation/sample_submission.csv -i data/resized416x736_noise_denoise_test -s data/tfrecords033
 ```
 
 ### 1-5.upload to kaggle datasets
@@ -77,12 +77,12 @@ Then paste them in main scripts.
 # 2. Training
 Keep running these scripts until reaching end of epochs
 ```
-python 02_main/exp072.py
-python 02_main/exp084.py
-python 02_main/exp090.py
-python 02_main/exp103.py
-python 02_main/exp1031.py
-python 02_main/exp0845.py
+python main.py -c exp/072.yaml -m train
+python main.py -c exp/084.yaml -m train
+python main.py -c exp/0845.yaml -m train
+python main.py -c exp/090.yaml -m train
+python main.py -c exp/103.yaml -m train
+python main.py -c exp/1031.yaml -m train
 ```
 
 # 3. Inference
