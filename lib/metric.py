@@ -11,7 +11,7 @@ class Evaluator():
         self.num_show = num_show
 
     def _seq2inchi(self, seq):
-        seq = tf.cast(seq, tf.int64)
+        seq = tf.cast(seq, tf.int32)
         inchi = self.tokenizer.predict_captions(seq.numpy())
         return inchi
 

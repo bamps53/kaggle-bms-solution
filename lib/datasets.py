@@ -47,7 +47,7 @@ def _reshape_image(img, height, width, gray_scale):
     return img
 
 
-def read_tfrecord(example, height, width, seq_len, gray_scale=False):
+def read_tfrecord(example, height, width, seq_len, label_dtype, gray_scale=False):
     tfrec_format = {
         'image': tf.io.FixedLenFeature([], tf.string),
         'image_id': tf.io.FixedLenFeature([], tf.string),
@@ -57,10 +57,11 @@ def read_tfrecord(example, height, width, seq_len, gray_scale=False):
     img = tf.image.decode_png(example['image'])
     img = _reshape_image(img, height, width, gray_scale)
 
-    label = tf.io.decode_raw(example['label'], tf.int32)
+    label = tf.io.decode_raw(example['label'], label_dtype)
     label = tf.reshape(label, (277,))
     label = label[:seq_len]
     label = (label + 1) % 193
+    label = tf.io.decode_raw(label, tf.int32)
     return img, label
 
 
@@ -112,14 +113,14 @@ def _get_tfrecords_path(mode, gcs_dir, fold, pseudo_gcs_dir=None):
     return files, length
 
 
-def get_train_dataset(gcs_dir, batch_size, fold, dtype_, height, width, seq_len, gray_scale, rotate_angle, zoom_range, do_salt_and_pepper, pseudo_gcs_dir=None):
+def get_train_dataset(gcs_dir, batch_size, fold, dtype_, height, width, seq_len, label_dtype, gray_scale, rotate_angle, zoom_range, do_salt_and_pepper, pseudo_gcs_dir=None):
     files, length = _get_tfrecords_path('train', gcs_dir, fold, pseudo_gcs_dir)
 
     ds = tf.data.TFRecordDataset(files, num_parallel_reads=AUTO)
     ds = ds.prefetch(AUTO)
 
     def _read_func(example):
-        return read_tfrecord(example, height, width, seq_len, gray_scale)
+        return read_tfrecord(example, height, width, seq_len, label_dtype, gray_scale)
     ds = ds.map(_read_func, num_parallel_calls=AUTO)
 
     ignore_order = tf.data.Options()
@@ -154,14 +155,14 @@ def get_train_dataset(gcs_dir, batch_size, fold, dtype_, height, width, seq_len,
     return ds, length
 
 
-def get_val_dataset(gcs_dir, batch_size, fold, dtype_, height, width, seq_len, gray_scale):
+def get_val_dataset(gcs_dir, batch_size, fold, dtype_, height, width, seq_len, label_dtype, gray_scale):
     files, length = _get_tfrecords_path('val', gcs_dir, fold)
 
     ds = tf.data.TFRecordDataset(files, num_parallel_reads=AUTO)
     ds = ds.prefetch(AUTO)
 
     def _read_func(example):
-        return read_tfrecord(example, height, width, seq_len, gray_scale)
+        return read_tfrecord(example, height, width, seq_len, label_dtype, gray_scale)
     ds = ds.map(_read_func, num_parallel_calls=AUTO)
 
     ds = ds.batch(batch_size, drop_remainder=True)

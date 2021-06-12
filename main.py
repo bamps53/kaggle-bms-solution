@@ -37,8 +37,8 @@ def main(config_path, mode, resume):
     os.makedirs(CFG.save_dir, exist_ok=True)
 
     
-    pad_token = tf.constant(CFG.pad_token, dtype=tf.int64)
-    start_token = tf.constant(CFG.start_token, dtype=tf.int64)
+    pad_token = tf.constant(CFG.pad_token, dtype=tf.int32)
+    start_token = tf.constant(CFG.start_token, dtype=tf.int32)
 
     with strategy.scope():
         loss_object = FocalLoss(
@@ -92,10 +92,10 @@ def main(config_path, mode, resume):
         wandb.init(project='bms-tf-keras-baseline', id=id_, resume="allow")
         train_dataset, train_length = get_train_dataset(
             CFG.train_gcs_dir, CFG.batch_size, CFG.fold, dtype_,
-            CFG.image_height, CFG.image_width, CFG.seq_len, CFG.gray_scale, CFG.rotate_angle, CFG.zoom_range, CFG.pseudo_gcs_dir)
+            CFG.image_height, CFG.image_width, CFG.seq_len, CFG.label_dtype, CFG.gray_scale, CFG.rotate_angle, CFG.zoom_range, CFG.pseudo_gcs_dir)
         val_dataset, val_length = get_val_dataset(
             CFG.val_gcs_dir, CFG.test_batch_size, CFG.fold, dtype_,
-            CFG.image_height, CFG.image_width, CFG.seq_len, CFG.gray_scale)
+            CFG.image_height, CFG.image_width, CFG.seq_len, CFG.label_dtype, CFG.gray_scale)
         trainer.fit(train_dataset, val_dataset)
 
 

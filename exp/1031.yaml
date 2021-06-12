@@ -36,6 +36,7 @@ zoom_range: 0.1
 fold: 0
 gray_scale: True
 do_salt_and_pepper: True
+label_dtype: int64
 
 # model
 encoder_dim: 1792
