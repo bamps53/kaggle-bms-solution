@@ -61,7 +61,7 @@ def read_tfrecord(example, height, width, seq_len, label_dtype, gray_scale=False
     label = tf.reshape(label, (277,))
     label = label[:seq_len]
     label = (label + 1) % 193
-    label = tf.io.decode_raw(label, tf.int32)
+    label = tf.cast(label, tf.int32)
     return img, label
 
 
