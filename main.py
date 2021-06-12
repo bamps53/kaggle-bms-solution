@@ -56,11 +56,11 @@ def main(config_path, mode, resume):
         # Encoder
         if CFG.encoder_transformer:
             pre_norm = True
-            encoder = Encoder(CFG.d_model, CFG.encoder_drop_rate,
+            encoder = Encoder(CFG.d_model, CFG.encoder_drop_rate, dtype_,
                               CFG.num_layers, CFG.num_heads, CFG.dff, CFG.row_size, CFG.col_size)
         else:
             pre_norm = False
-            encoder = Encoder(CFG.d_model, CFG.encoder_drop_rate)
+            encoder = Encoder(CFG.d_model, CFG.encoder_drop_rate, dtype_)
 
         # Decoder
         decoder = Decoder(CFG.num_layers, CFG.d_model, CFG.num_heads,

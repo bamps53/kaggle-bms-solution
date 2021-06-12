@@ -150,7 +150,7 @@ class EncoderLayer(tf.keras.layers.Layer):
 
 
 class Encoder(tf.keras.Model):
-    def __init__(self, d_model, drop_rate, num_layers=None, num_heads=None, dff=None, row_size=None, col_size=None):
+    def __init__(self, d_model, drop_rate, dtype_, num_layers=None, num_heads=None, dff=None, row_size=None, col_size=None):
         super(Encoder, self).__init__()
         self.d_model = d_model
         self.backbone = efn.EfficientNetB4(
@@ -158,7 +158,7 @@ class Encoder(tf.keras.Model):
         self.reshape = tf.keras.layers.Reshape(
             [-1, self.d_model], name='reshape_featuere_maps')
         self.pos_encoding_2d = positional_encoding_2d(
-            row_size, col_size, self.d_model)
+            row_size, col_size, self.d_model, dtype_)
 
         self.embedding = tf.keras.layers.Dense(self.d_model, activation='relu')
         self.dropout = tf.keras.layers.Dropout(drop_rate)
