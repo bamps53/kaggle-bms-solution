@@ -24,7 +24,7 @@ def get_last_step(save_dir):
 
 class Trainer:
     def __init__(self, encoder, decoder, optimizer, scheduler, loss_fn, metric_fn,
-                 evaluator, pad_token, start_token, seq_len, strategy, num_epochs=100,
+                 evaluator, pad_token, start_token, seq_len, strategy, dtype_, num_epochs=100,
                  eval_freq=1, log_freq=100, save_freq=5000, resume=False, steps_per_epoch=None,
                  resume_from=None, save_dir=None):
         self.encoder = encoder
@@ -38,6 +38,7 @@ class Trainer:
         self.start_token = start_token
         self.seq_len = seq_len
         self.strategy = strategy
+        self.dtype_ = dtype_
         self.num_epochs = num_epochs
         self.resume = resume
         self.resume_from = resume_from
@@ -76,7 +77,7 @@ class Trainer:
     def train_step(self, images, labels):
         labels_input = labels[:, :-1]
         labels_target = labels[:, 1:]
-        dec_mask = create_decoder_mask(labels_target)
+        dec_mask = create_decoder_mask(labels_target, self.dtype_)
 
         with tf.GradientTape() as tape:
             enc_output = self.encoder(images, training=True)
@@ -118,7 +119,7 @@ class Trainer:
 
         # Teacher forcing - feeding the target as the next input
         for t in tqdm(range(1, self.seq_len)):
-            dec_mask = create_decoder_mask(output)
+            dec_mask = create_decoder_mask(output, self.dtype_)
             predictions = self.decoder(
                 output, enc_output, False, dec_mask)
             predictions = predictions[:, -1:, :]  # (batch_size, 1, vocab_size)
@@ -182,7 +183,7 @@ class Trainer:
         output = tf.cast(output, tf.int32)
 
         for _ in tqdm(range(1, self.seq_len)):
-            dec_mask = create_decoder_mask(output)
+            dec_mask = create_decoder_mask(output, self.dtype_)
             predictions = self.decoder(
                 output, enc_output, False, dec_mask)
             predictions = predictions[:, -1:, :]  # (batch_size, 1, vocab_size)

@@ -65,9 +65,8 @@ def scaled_dot_product_attention(q, k, v, mask):
     return output, attention_weights
 
 
-def create_decoder_mask(target):
+def create_decoder_mask(target, dtype_):
     seq_len = tf.shape(target)[1]
-    dtype_ = target.dtype
     look_ahead_mask = create_look_ahead_mask(seq_len, dtype_)
     dec_target_padding_mask = create_padding_mask(target)
     combined_mask = tf.maximum(dec_target_padding_mask, look_ahead_mask)
@@ -289,6 +288,7 @@ class Decoder(tf.keras.Model):
         super(Decoder, self).__init__()
         self.d_model = d_model
         self.num_layers = num_layers
+        self.dtype_ = dtype_
 
         self.embedding = tf.keras.layers.Embedding(target_vocab_size, d_model)
         self.pos_encoding_1d = positional_encoding_1d(max_len, d_model, dtype_)
@@ -302,7 +302,6 @@ class Decoder(tf.keras.Model):
 
     def call(self, x, enc_output, training, look_ahead_mask=None, padding_mask=None):
         seq_len = tf.shape(x)[1]
-        look_ahead_mask = create_decoder_mask(x)
         dec_pos = self.pos_encoding_1d[:, :seq_len, :]
         x = self.embedding(x)  # (batch_size, target_seq_len, d_model)
         x *= tf.math.sqrt(tf.cast(self.d_model, x.dtype))
