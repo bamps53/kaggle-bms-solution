@@ -76,12 +76,12 @@ Then paste them in main scripts.
 # 2. Training
 Keep running these scripts until reaching end of epochs
 ```
-python main.py -c exp/072.yaml -m train
-python main.py -c exp/084.yaml -m train
-python main.py -c exp/0845.yaml -m train
-python main.py -c exp/090.yaml -m train
-python main.py -c exp/103.yaml -m train
-python main.py -c exp/1031.yaml -m train
+python main.py -c exp/072.yaml --mode train
+python main.py -c exp/084.yaml --mode train
+python main.py -c exp/0845.yaml --mode train
+python main.py -c exp/090.yaml --mode train
+python main.py -c exp/103.yaml --mode train
+python main.py -c exp/1031.yaml --mode train
 ```
 
 # 3. Inference
