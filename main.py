@@ -37,11 +37,13 @@ def main(config_path, mode, resume):
     os.makedirs(CFG.save_dir, exist_ok=True)
 
     
+    pad_token = tf.constant(CFG.pad_token, dtype=tf.int64)
+    start_token = tf.constant(CFG.start_token, dtype=tf.int64)
 
     with strategy.scope():
         loss_object = FocalLoss(
-            pad_token=tf.constant(CFG.pad_token, dtype=tf.int64),
-            sos_token=tf.constant(CFG.start_token, dtype=tf.int64),
+            pad_token=pad_token,
+            sos_token=start_token,
             num_classes=CFG.vocab_size,
             reduction=tf.keras.losses.Reduction.NONE)
 
@@ -75,6 +77,7 @@ def main(config_path, mode, resume):
 
         trainer = Trainer(encoder=encoder, decoder=decoder, optimizer=optimizer, scheduler=scheduler,
                           loss_fn=loss_function, metric_fn=train_accuracy, evaluator=evaluator,
+                          pad_token=pad_token, start_token=start_token, seq_len=CFG.seq_len, strategy=strategy, 
                           num_epochs=CFG.num_epochs, resume=resume, steps_per_epoch=CFG.steps_per_epoch)
 
     if mode == 'inference':
