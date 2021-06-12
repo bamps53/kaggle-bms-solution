@@ -28,11 +28,13 @@ def get_strategy():
         strategy = tf.distribute.experimental.TPUStrategy(TPU)
     else:
         strategy = tf.distribute.get_strategy()
-    return strategy
-
-
-def set_policy(strategy):
+    
     is_tpu = isinstance(strategy, tf.distribute.experimental.TPUStrategy)
+
+    return strategy, is_tpu
+
+
+def set_policy(is_tpu):
     mixed_precision.set_policy('mixed_bfloat16' if is_tpu else 'float32')
     tf.config.optimizer.set_jit(True)
     print(f'Compute dtype: {mixed_precision.global_policy().compute_dtype}')

@@ -17,6 +17,7 @@ from lib.metric import Evaluator
 from lib.trainer import Trainer
 from lib.config import update_config
 
+YOUR_GCS_DIR = 'gs://model_storage53'
 
 @click.command()
 @click.option('--config_path', '-c', type=str)
@@ -25,13 +26,13 @@ from lib.config import update_config
 def main(config_path, mode, resume):
     seed_everything()
 
-    strategy = get_strategy()
-    set_policy(strategy)
-    REPLICAS = strategy.num_replicas_in_sync
-    print(f'NUM REPLICAS: {REPLICAS}')
+    strategy, is_tpu = get_strategy()
+    set_policy(is_tpu)
+    num_replicas = strategy.num_replicas_in_sync
+    print(f'num_replicas: {num_replicas}')
 
     CFG = OmegaConf.load(config_path)
-    CFG = update_config(CFG)
+    CFG = update_config(CFG, YOUR_GCS_DIR, is_tpu, num_replicas)
     os.makedirs(CFG.save_dir, exist_ok=True)
 
     with strategy.scope():
