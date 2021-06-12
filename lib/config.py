@@ -19,4 +19,5 @@ def update_config(CFG, gcs_dir, is_tpu, num_replicas):
 
     CFG.init_lr = CFG.init_lr * CFG.batch_size_base / 32
     CFG.final_lr = CFG.final_lr * CFG.batch_size_base / 32
+    CFG.num_total_steps = CFG.steps_per_epoch * CFG.num_epochs
     return CFG
