@@ -46,6 +46,7 @@ class Trainer:
         self.save_dir = save_dir
         self.eval_freq = eval_freq
         self.log_freq = log_freq
+        self.save_freq = save_freq
 
         self.init_epoch = 1
         self.total_steps = 0
