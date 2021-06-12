@@ -27,6 +27,7 @@ def main(config_path, mode, resume):
     seed_everything()
 
     strategy, is_tpu = get_strategy()
+    dtype_ = tf.bfloat16 if is_tpu else tf.float32
     set_policy(is_tpu)
     num_replicas = strategy.num_replicas_in_sync
     print(f'num_replicas: {num_replicas}')
@@ -35,10 +36,12 @@ def main(config_path, mode, resume):
     CFG = update_config(CFG, YOUR_GCS_DIR, is_tpu, num_replicas)
     os.makedirs(CFG.save_dir, exist_ok=True)
 
+    
+
     with strategy.scope():
         loss_object = FocalLoss(
-            pad_token=CFG.pad_token,
-            sos_token=CFG.start_token,
+            pad_token=tf.constant(CFG.pad_token, dtype=tf.int64),
+            sos_token=tf.constant(CFG.start_token, dtype=tf.int64),
             num_classes=CFG.vocab_size,
             reduction=tf.keras.losses.Reduction.NONE)
 
@@ -62,7 +65,7 @@ def main(config_path, mode, resume):
         # Decoder
         decoder = Decoder(CFG.num_layers, CFG.d_model, CFG.num_heads,
                           CFG.dff, CFG.vocab_size, CFG.seq_len,
-                          CFG.row_size, CFG.col_size, CFG.dtype, CFG.decoder_drop_rate, pre_norm)
+                          CFG.row_size, CFG.col_size, dtype_, CFG.decoder_drop_rate, pre_norm)
 
         optimizer = tfa.optimizers.AdamW(CFG.init_lr)
         scheduler = get_scheduler(optimizer, CFG.warmup_lr, CFG.init_lr,
@@ -85,10 +88,10 @@ def main(config_path, mode, resume):
         id_ = CFG.exp_id.split('_')[0]
         wandb.init(project='bms-tf-keras-baseline', id=id_, resume="allow")
         train_dataset, train_length = get_train_dataset(
-            CFG.train_gcs_dir, CFG.batch_size, CFG.fold, CFG.dtype,
+            CFG.train_gcs_dir, CFG.batch_size, CFG.fold, dtype_,
             CFG.image_height, CFG.image_width, CFG.seq_len, CFG.gray_scale, CFG.rotate_angle, CFG.zoom_range, CFG.pseudo_gcs_dir)
         val_dataset, val_length = get_val_dataset(
-            CFG.val_gcs_dir, CFG.test_batch_size, CFG.fold, CFG.dtype,
+            CFG.val_gcs_dir, CFG.test_batch_size, CFG.fold, dtype_,
             CFG.image_height, CFG.image_width, CFG.seq_len, CFG.gray_scale)
         trainer.fit(train_dataset, val_dataset)
 

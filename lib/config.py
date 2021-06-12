@@ -12,11 +12,6 @@ def update_config(CFG, gcs_dir, is_tpu, num_replicas):
     CFG.val_gcs_dir = GCS_PATHS[CFG.val_gcs_dir]
     CFG.test_gcs_dir = GCS_PATHS[CFG.test_gcs_dir]
 
-    CFG.pad_token = tf.constant(CFG.pad_token, dtype=tf.int64)
-    CFG.start_token = tf.constant(CFG.start_token, dtype=tf.int64)
-    CFG.end_token = tf.constant(CFG.end_token, dtype=tf.int64)
-
-    CFG.dtype = tf.bfloat16 if is_tpu else tf.float32
     CFG.save_dir = f'{gcs_dir}/{CFG.exp_id}'
 
     CFG.batch_size = CFG.batch_size_base * num_replicas
