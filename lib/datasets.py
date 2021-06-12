@@ -9,15 +9,14 @@ from tensorflow.keras.layers.experimental.preprocessing import RandomZoom
 AUTO = tf.data.experimental.AUTOTUNE
 
 GCS_PATHS = {
-    '300x600_no_pad': '',
-    '300x600_no_pad_test': '',
+    '300x600_no_pad': 'gs://kds-58ed18930131dc67bac2c0bd3f88332161cf5ce6936e2a06638eaba7',
+    '300x600_no_pad_test': 'gs://kds-ade8722870002e6b333930c93d5294fd143c14064293116453ba9832',
     '416x736_no_pad': 'gs://kds-f090a95044a5e32eda53024e47ef1fe88853b522598a09272e887cc4',
-    '416x736_no_pad_noise_denoise': '',
-    '416x736_no_pad_test': '',
-    '416x736_no_pad_noise_denoise_test': '',
-    '416x736_no_pad_pseudo060': '',
+    '416x736_no_pad_noise_denoise': 'gs://kds-13109b3c9ee7b300b9440b1797c8a7abbf8eaca9015034bac331412a',
+    '416x736_no_pad_test': 'gs://kds-3c6742d4e2d876cb67576c058fc94ee6d81d558d719060f68a25f252',
+    '416x736_no_pad_noise_denoise_test': 'gs://kds-955d0490a0b76ad194a969c3b5724965b3f87836c5386bd748a0a618',
+    '416x736_no_pad_pseudo060': 'gs://kds-629a00274e5eb59b41e21e2d6f6f058f2a02ad06264a5199df8c164c',
 }
-
 
 def random_rotate(img, angle, batch_size):
     angle *= np.pi/180

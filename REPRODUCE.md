@@ -64,7 +64,6 @@ https://www.kaggle.com/bamps53/tfrecords013
 https://www.kaggle.com/bamps53/tfrecords016  
 https://www.kaggle.com/bamps53/tfrecords018  
 https://www.kaggle.com/bamps53/tfrecords020  
-https://www.kaggle.com/bamps53/tfrecords031
 https://www.kaggle.com/bamps53/tfrecords031-2
 https://www.kaggle.com/bamps53/tfrecords032  
 https://www.kaggle.com/bamps53/tfrecords033  
