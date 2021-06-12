@@ -1,0 +1,4 @@
+efficientnet
+wandb
+tensorflow_addons
+Levenshtein
