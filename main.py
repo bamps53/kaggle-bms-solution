@@ -78,7 +78,7 @@ def main(config_path, mode, resume):
         trainer = Trainer(encoder=encoder, decoder=decoder, optimizer=optimizer, scheduler=scheduler,
                           loss_fn=loss_function, metric_fn=train_accuracy, evaluator=evaluator,
                           pad_token=pad_token, start_token=start_token, seq_len=CFG.seq_len, strategy=strategy, 
-                          num_epochs=CFG.num_epochs, resume=resume, steps_per_epoch=CFG.steps_per_epoch)
+                          dtype_=dtype_, num_epochs=CFG.num_epochs, resume=resume, steps_per_epoch=CFG.steps_per_epoch)
 
     if mode == 'inference':
         test_dataset, test_length = get_test_dataset(CFG.test_batch_size)
