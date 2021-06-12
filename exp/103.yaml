@@ -20,6 +20,7 @@ verbose_freq: 100
 save_freq: 5000
 init_lr: 1.0e-3
 final_lr: 1.0e-5
+warmup_lr: 1.0e-6
 
 # data
 image_height: 416
