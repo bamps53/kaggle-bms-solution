@@ -1,5 +1,6 @@
 # general
 exp_id: exp072_300_600_transformer_b4_2layers_seqlen200_fix_pos_random_crop_focal
+
 debug: False
 inference: False
 resume: True

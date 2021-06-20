@@ -203,6 +203,24 @@ class Trainer:
 
         return predictions
 
+    def score_step(self, images, labels):
+        labels_input = labels[:, :-1]
+        labels_target = labels[:, 1:]
+        dec_mask = create_decoder_mask(labels_target)
+
+        enc_output = self.encoder(images, training=False)
+        predictions, _ = self.decoder(
+            labels_input, enc_output, training=False, look_ahead_mask=dec_mask)
+        loss = self.loss_fn(labels_target, predictions)
+        return loss
+
+    def rescore(self, test_dataset, num_test_steps):
+        losses = []
+        for step, (images, labels) in tqdm(enumerate(test_dataset), total=num_test_steps):
+            loss = self.score_step(images, labels)
+            losses.append(loss.numpy())
+        return losses
+
     def predict(self, test_dataset, num_test_steps):
         test_dist_dataset = self.strategy.experimental_distribute_dataset(
             test_dataset)

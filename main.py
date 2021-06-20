@@ -1,9 +1,10 @@
 import json
 import os
 
+import pandas as pd
+import numpy as np
 import tensorflow as tf
 import tensorflow_addons as tfa
-import wandb
 import click
 from omegaconf import OmegaConf
 
@@ -21,7 +22,7 @@ YOUR_GCS_DIR = 'gs://model_storage53'
 
 @click.command()
 @click.option('--config_path', '-c', type=str)
-@click.option('--mode', '-m', type=click.Choice(['train', 'inference']))
+@click.option('--mode', '-m', type=click.Choice(['train', 'inference', 'rescore']))
 @click.option('--resume', '-r', is_flag=True)
 def main(config_path, mode, resume):
     seed_everything()
@@ -36,7 +37,6 @@ def main(config_path, mode, resume):
     CFG = update_config(CFG, YOUR_GCS_DIR, is_tpu, num_replicas)
     os.makedirs(CFG.save_dir, exist_ok=True)
 
-    
     pad_token = tf.constant(CFG.pad_token, dtype=tf.int32)
     start_token = tf.constant(CFG.start_token, dtype=tf.int32)
 
@@ -78,7 +78,8 @@ def main(config_path, mode, resume):
         trainer = Trainer(encoder=encoder, decoder=decoder, optimizer=optimizer, scheduler=scheduler,
                           loss_fn=loss_function, metric_fn=train_accuracy, evaluator=evaluator,
                           pad_token=pad_token, start_token=start_token, seq_len=CFG.seq_len, strategy=strategy, 
-                          dtype_=dtype_, num_epochs=CFG.num_epochs, resume=resume, steps_per_epoch=CFG.steps_per_epoch)
+                          dtype_=dtype_, num_epochs=CFG.num_epochs, resume=resume, steps_per_epoch=CFG.steps_per_epoch,
+                          save_dir=CFG.save_dir, resume_from=CFG.resume_from)
 
     if mode == 'inference':
         test_dataset, test_length = get_test_dataset(CFG.test_batch_size)
@@ -87,9 +88,22 @@ def main(config_path, mode, resume):
         with tf.io.gfile.GFile(f'{CFG.save_dir}/test_results.json', 'w') as f:
             json.dump(all_predictions, f)
 
-    else:
+    elif mode == 'rescore':
         id_ = CFG.exp_id.split('_')[0]
-        wandb.init(project='bms-tf-keras-baseline', id=id_, resume="allow")
+        df_name = '../candidates.csv'
+        save_name = f'./{id_}_rescore.csv'
+
+        test_dataset, test_length = get_test_dataset(df_name, CFG.test_batch_size)
+        num_test_steps = test_length // CFG.test_batch_size + 1
+
+        losses = trainer.rescore(test_dataset, num_test_steps)
+
+        df = pd.read_csv(df_name)
+        df['focal_score'] = np.concatenate(losses)[:len(df)]
+        df.to_csv(save_name, index=False)
+
+    else: # train
+        id_ = CFG.exp_id.split('_')[0]
         train_dataset, train_length = get_train_dataset(
             CFG.train_gcs_dir, CFG.batch_size, CFG.fold, dtype_,
             CFG.image_height, CFG.image_width, CFG.seq_len, CFG.label_dtype, CFG.gray_scale, CFG.rotate_angle, CFG.zoom_range, CFG.pseudo_gcs_dir)

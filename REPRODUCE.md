@@ -85,24 +85,23 @@ python main.py -c exp/1031.yaml --mode train
 ```
 
 # 3. Inference
-After finishing training, set ```inference = True``` in ```Config``` class in main scripts.
-Then rerun all.
+After finishing training, run these command to infer.
 ```
-python 02_main/exp072.py
-python 02_main/exp084.py
-python 02_main/exp090.py
-python 02_main/exp103.py
-python 02_main/exp1031.py
-python 02_main/exp0845.py
+python main.py -c exp/072.yaml --mode inference --resume
+python main.py -c exp/084.yaml --mode inference --resume
+python main.py -c exp/0845.yaml --mode inference --resume
+python main.py -c exp/090.yaml --mode inference --resume
+python main.py -c exp/103.yaml --mode inference --resume
+python main.py -c exp/1031.yaml --mode inference --resume
 ```
 
 # 4. Rescore
 After downloading submission files from Kaggle dataset, run these scripts to rescore candidates.
 ```
-python 03_rescore/exp072.py
-python 03_rescore/exp084.py
-python 03_rescore/exp090.py
-python 03_rescore/exp103.py
-python 03_rescore/exp1031.py
-python 03_rescore/exp0845.py
+python main.py -c exp/072.yaml --mode rescore --resume
+python main.py -c exp/084.yaml --mode rescore --resume
+python main.py -c exp/0845.yaml --mode rescore --resume
+python main.py -c exp/090.yaml --mode rescore --resume
+python main.py -c exp/103.yaml --mode rescore --resume
+python main.py -c exp/1031.yaml --mode rescore --resume
 ```
