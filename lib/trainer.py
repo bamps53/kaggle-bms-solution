@@ -71,7 +71,8 @@ class Trainer:
 
             self.encoder.load_weights(encoder_path)
             self.decoder.load_weights(decoder_path)
-            self.scheduler.step(self.total_steps)
+            if self.scheduler:
+                self.scheduler.step(self.total_steps)
             print('load encoder from:', encoder_path)
             print('load decoder from:', decoder_path)
 
