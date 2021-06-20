@@ -14,7 +14,7 @@ from lib.datasets import get_train_dataset, get_val_dataset, get_test_dataset, g
 from lib.scheduler import get_scheduler
 from lib.utils import seed_everything, get_strategy, set_policy
 from lib.model import Encoder, Decoder
-from lib.loss import FocalLoss
+from lib.loss import FocalLoss, FocalLossForRescore
 from lib.metric import Evaluator
 from lib.trainer import Trainer
 from lib.config import update_config
@@ -43,7 +43,8 @@ def main(config_path, mode, resume):
     start_token = tf.constant(CFG.start_token, dtype=tf.int32)
 
     with strategy.scope():
-        loss_object = FocalLoss(
+        loss_cls = FocalLossForRescore if mode == 'rescore' else FocalLoss
+        loss_object = loss_cls(
             pad_token=pad_token,
             sos_token=start_token,
             num_classes=CFG.vocab_size,
@@ -51,7 +52,10 @@ def main(config_path, mode, resume):
 
         def loss_function(real, pred):
             per_example_loss = loss_object(real, pred)
-            return tf.nn.compute_average_loss(per_example_loss, global_batch_size=CFG.batch_size)
+            if mode == 'rescore':
+                return per_example_loss
+            else:
+                return tf.nn.compute_average_loss(per_example_loss, global_batch_size=CFG.batch_size)
 
         # Metrics
         train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(
