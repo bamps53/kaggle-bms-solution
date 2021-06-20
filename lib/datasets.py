@@ -12,13 +12,13 @@ tokenizer = Tokenizer()
 AUTO = tf.data.experimental.AUTOTUNE
 
 TFRECORDS_PATHS = {
-    'tfrecords013': 'gs://kds-58ed18930131dc67bac2c0bd3f88332161cf5ce6936e2a06638eaba7',
-    'tfrecords016': 'gs://kds-ade8722870002e6b333930c93d5294fd143c14064293116453ba9832',
-    'tfrecords018': 'gs://kds-f090a95044a5e32eda53024e47ef1fe88853b522598a09272e887cc4',
-    'tfrecords020': 'gs://kds-13109b3c9ee7b300b9440b1797c8a7abbf8eaca9015034bac331412a',
-    'tfrecords031-2': 'gs://kds-629a00274e5eb59b41e21e2d6f6f058f2a02ad06264a5199df8c164c',
-    'tfrecords032': 'gs://kds-3c6742d4e2d876cb67576c058fc94ee6d81d558d719060f68a25f252',
-    'tfrecords033': 'gs://kds-955d0490a0b76ad194a969c3b5724965b3f87836c5386bd748a0a618',
+    # 'tfrecords013': 'gs://kds-58ed18930131dc67bac2c0bd3f88332161cf5ce6936e2a06638eaba7',
+    # 'tfrecords016': 'gs://kds-ade8722870002e6b333930c93d5294fd143c14064293116453ba9832',
+    # 'tfrecords018': 'gs://kds-f090a95044a5e32eda53024e47ef1fe88853b522598a09272e887cc4',
+    # 'tfrecords020': 'gs://kds-13109b3c9ee7b300b9440b1797c8a7abbf8eaca9015034bac331412a',
+    # 'tfrecords031-2': 'gs://kds-629a00274e5eb59b41e21e2d6f6f058f2a02ad06264a5199df8c164c',
+    # 'tfrecords032': 'gs://kds-3c6742d4e2d876cb67576c058fc94ee6d81d558d719060f68a25f252',
+    'tfrecords033': 'gs://kds-99c634a8cd4dffcfa3e52d32c5a993d8fdb64ad28bab1eb933f215e8',
 }
 
 GCS_PATHS = {
