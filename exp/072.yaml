@@ -5,9 +5,9 @@ debug: False
 inference: False
 resume: True
 resume_from_last: True
-resume_epoch: None
-resume_steps: None
-resume_from: None
+resume_epoch: Null
+resume_steps: Null
+resume_from: Null
 
 # solver
 steps_per_epoch: 20000
@@ -31,7 +31,7 @@ seq_len: 200
 train_gcs_dir: 300x600_no_pad
 val_gcs_dir: 300x600_no_pad
 test_gcs_dir: 300x600_no_pad_test
-pseudo_gcs_dir: None
+pseudo_gcs_dir: Null
 rotate_angle: 5
 zoom_range: 0.1
 fold: 0

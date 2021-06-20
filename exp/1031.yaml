@@ -4,8 +4,8 @@ debug: False
 inference: False
 resume: True
 resume_from_last: True
-resume_epoch: None
-resume_steps: None
+resume_epoch: Null
+resume_steps: Null
 resume_from: exp103_416x736_transformer_b4_2layers_seqlen200_salt_pepper
 
 # solver
@@ -30,7 +30,7 @@ seq_len: 200
 train_gcs_dir: 416x736_no_pad_noise_denoise
 val_gcs_dir: 416x736_no_pad_noise_denoise
 test_gcs_dir: 416x736_no_pad_noise_denoise_test
-pseudo_gcs_dir: None
+pseudo_gcs_dir: Null
 rotate_angle: 5
 zoom_range: 0.1
 fold: 0

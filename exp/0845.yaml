@@ -4,8 +4,8 @@ debug: False
 inference: False
 resume: True
 resume_from_last: True
-resume_epoch: None
-resume_steps: None
+resume_epoch: Null
+resume_steps: Null
 resume_from: exp084_416_736_transformer_b4_2layers_seqlen200_fix_pos_random_crop_focal
 
 # solver
