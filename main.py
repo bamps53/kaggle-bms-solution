@@ -70,7 +70,7 @@ def main(config_path, mode, resume):
                           CFG.row_size, CFG.col_size, dtype_, CFG.decoder_drop_rate, pre_norm)
 
         scheduler, optimizer = None, None
-        if CFG.mode == 'train':
+        if mode == 'train':
             optimizer = tfa.optimizers.AdamW(CFG.init_lr)
             scheduler = get_scheduler(optimizer, CFG.warmup_lr, CFG.init_lr,
                                       CFG.final_lr, CFG.num_total_steps, CFG.warmup_steps)
