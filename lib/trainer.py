@@ -19,7 +19,7 @@ def get_last_step(save_dir):
         last_step = max(steps)
         return last_step
     else:
-        0
+        return 0
 
 
 class Trainer:

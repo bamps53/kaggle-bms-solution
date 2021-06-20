@@ -13,6 +13,8 @@ def update_config(CFG, gcs_dir, is_tpu, num_replicas):
     CFG.test_gcs_dir = GCS_PATHS[CFG.test_gcs_dir]
 
     CFG.save_dir = f'{gcs_dir}/{CFG.exp_id}'
+    if CFG.resume_from:
+        CFG.resume_from = f'{gcs_dir}/{CFG.resume_from}'
 
     CFG.batch_size = CFG.batch_size_base * num_replicas
     CFG.test_batch_size = CFG.batch_size_base * num_replicas
