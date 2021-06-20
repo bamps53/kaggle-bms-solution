@@ -37,6 +37,7 @@ fold: 0
 gray_scale: True
 do_salt_and_pepper: True
 label_dtype: int64
+img_dir: data/resized416x736_noise_denoise_test
 
 # model
 encoder_dim: 1792

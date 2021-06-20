@@ -37,6 +37,7 @@ fold: 0
 gray_scale: False
 do_salt_and_pepper: False
 label_dtype: int64
+img_dir: data/resized416x736_test
 
 # model
 encoder_dim: 1792

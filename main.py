@@ -9,7 +9,7 @@ import click
 from omegaconf import OmegaConf
 
 
-from lib.datasets import get_train_dataset, get_val_dataset, get_test_dataset
+from lib.datasets import get_train_dataset, get_val_dataset, get_test_dataset, get_local_candidate_dataset
 from lib.scheduler import get_scheduler
 from lib.utils import seed_everything, get_strategy, set_policy
 from lib.model import Encoder, Decoder
@@ -82,7 +82,10 @@ def main(config_path, mode, resume):
                           save_dir=CFG.save_dir, resume_from=CFG.resume_from)
 
     if mode == 'inference':
-        test_dataset, test_length = get_test_dataset(CFG.test_batch_size)
+        test_dataset, test_length = get_test_dataset(
+            CFG.test_gcs_dir, CFG.test_batch_size, dtype_, 
+            CFG.image_height, CFG.image_width, CFG.gray_scale)
+        
         num_test_steps = test_length // CFG.batch_size + 1
         all_predictions = trainer.predict(test_dataset, num_test_steps)
         with tf.io.gfile.GFile(f'{CFG.save_dir}/test_results.json', 'w') as f:
@@ -90,17 +93,19 @@ def main(config_path, mode, resume):
 
     elif mode == 'rescore':
         id_ = CFG.exp_id.split('_')[0]
-        df_name = '../candidates.csv'
-        save_name = f'./{id_}_rescore.csv'
+        df_path = '../candidates.csv'
+        save_path = f'./{id_}_rescore.csv'
 
-        test_dataset, test_length = get_test_dataset(df_name, CFG.test_batch_size)
+        test_dataset, test_length = get_local_candidate_dataset(
+            df_path, CFG.img_dir, CFG.test_batch_size, CFG.image_height,
+            CFG.image_width, CFG.seq_len, CFG.gray_scale)
         num_test_steps = test_length // CFG.test_batch_size + 1
 
         losses = trainer.rescore(test_dataset, num_test_steps)
 
-        df = pd.read_csv(df_name)
+        df = pd.read_csv(df_path)
         df['focal_score'] = np.concatenate(losses)[:len(df)]
-        df.to_csv(save_name, index=False)
+        df.to_csv(save_path, index=False)
 
     else: # train
         id_ = CFG.exp_id.split('_')[0]
