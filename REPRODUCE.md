@@ -85,7 +85,9 @@ python main.py -c exp/1031.yaml --mode train
 ```
 
 # 3. Inference
-After finishing training, run these command to infer.
+After finishing training, run these command to infer.  
+The code will download models from gcs which was used to train,
+but you can also download from [this kaggle dataset](https://www.kaggle.com/bamps53/3rd-placebmspretrainedmodels).
 ```
 python main.py -c exp/072.yaml --mode inference --resume
 python main.py -c exp/084.yaml --mode inference --resume
@@ -93,6 +95,8 @@ python main.py -c exp/0845.yaml --mode inference --resume
 python main.py -c exp/090.yaml --mode inference --resume
 python main.py -c exp/103.yaml --mode inference --resume
 python main.py -c exp/1031.yaml --mode inference --resume
+
+python postprocess/normalize.py
 ```
 
 # 4. Rescore

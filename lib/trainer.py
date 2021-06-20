@@ -207,10 +207,10 @@ class Trainer:
     def score_step(self, images, labels):
         labels_input = labels[:, :-1]
         labels_target = labels[:, 1:]
-        dec_mask = create_decoder_mask(labels_target)
+        dec_mask = create_decoder_mask(labels_target, self.dtype_)
 
         enc_output = self.encoder(images, training=False)
-        predictions, _ = self.decoder(
+        predictions = self.decoder(
             labels_input, enc_output, training=False, look_ahead_mask=dec_mask)
         loss = self.loss_fn(labels_target, predictions)
         return loss

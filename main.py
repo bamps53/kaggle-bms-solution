@@ -1,4 +1,5 @@
 import json
+from logging import debug
 import os
 
 import pandas as pd
@@ -19,6 +20,7 @@ from lib.trainer import Trainer
 from lib.config import update_config
 
 YOUR_GCS_DIR = 'gs://model_storage53'
+
 
 @click.command()
 @click.option('--config_path', '-c', type=str)
@@ -79,15 +81,15 @@ def main(config_path, mode, resume):
 
         trainer = Trainer(encoder=encoder, decoder=decoder, optimizer=optimizer, scheduler=scheduler,
                           loss_fn=loss_function, metric_fn=train_accuracy, evaluator=evaluator,
-                          pad_token=pad_token, start_token=start_token, seq_len=CFG.seq_len, strategy=strategy, 
+                          pad_token=pad_token, start_token=start_token, seq_len=CFG.seq_len, strategy=strategy,
                           dtype_=dtype_, num_epochs=CFG.num_epochs, resume=resume, steps_per_epoch=CFG.steps_per_epoch,
                           save_dir=CFG.save_dir, resume_from=CFG.resume_from)
 
     if mode == 'inference':
         test_dataset, test_length = get_test_dataset(
-            CFG.test_gcs_dir, CFG.test_batch_size, dtype_, 
+            CFG.test_gcs_dir, CFG.test_batch_size, dtype_,
             CFG.image_height, CFG.image_width, CFG.gray_scale)
-        
+
         num_test_steps = test_length // CFG.batch_size + 1
         all_predictions = trainer.predict(test_dataset, num_test_steps)
         with tf.io.gfile.GFile(f'{CFG.save_dir}/test_results.json', 'w') as f:
@@ -99,7 +101,7 @@ def main(config_path, mode, resume):
         save_path = f'./{id_}_rescore.csv'
 
         test_dataset, test_length = get_local_candidate_dataset(
-            df_path, CFG.img_dir, CFG.test_batch_size, CFG.image_height,
+            df_path, CFG.img_dir, CFG.test_batch_size, dtype_, CFG.image_height,
             CFG.image_width, CFG.seq_len, CFG.gray_scale)
         num_test_steps = test_length // CFG.test_batch_size + 1
 
@@ -109,7 +111,7 @@ def main(config_path, mode, resume):
         df['focal_score'] = np.concatenate(losses)[:len(df)]
         df.to_csv(save_path, index=False)
 
-    else: # train
+    else:  # train
         id_ = CFG.exp_id.split('_')[0]
         train_dataset, train_length = get_train_dataset(
             CFG.train_gcs_dir, CFG.batch_size, CFG.fold, dtype_,

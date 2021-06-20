@@ -28,7 +28,7 @@ def get_strategy():
         strategy = tf.distribute.experimental.TPUStrategy(TPU)
     else:
         strategy = tf.distribute.get_strategy()
-    
+
     is_tpu = isinstance(strategy, tf.distribute.experimental.TPUStrategy)
 
     return strategy, is_tpu

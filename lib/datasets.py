@@ -31,6 +31,7 @@ GCS_PATHS = {
     '416x736_no_pad_noise_denoise_test': TFRECORDS_PATHS['tfrecords033'],
 }
 
+
 def random_rotate(img, angle, batch_size):
     angle *= np.pi/180
     angle = tf.random.uniform(
@@ -202,6 +203,7 @@ def get_test_dataset(gcs_dir, batch_size, dtype_, height, width, gray_scale):
     ds = ds.prefetch(1)
     return ds, length
 
+
 def read_image(file_name, label, height=416, width=736, seq_len=200):
     bits = tf.io.read_file(file_name)
     img = tf.image.decode_png(bits, channels=3)
@@ -210,6 +212,7 @@ def read_image(file_name, label, height=416, width=736, seq_len=200):
     label = (label + 1) % 193  # to set pad token as 0
     label = tf.cast(label, tf.int64)
     return img, label
+
 
 def read_local_image(file_name, label, height, width, seq_len, gray_scale):
     bits = tf.io.read_file(file_name)
@@ -225,21 +228,24 @@ def read_local_image(file_name, label, height, width, seq_len, gray_scale):
     label = tf.cast(label, tf.int32)
     return img, label
 
-def get_local_candidate_dataset(df_path, img_dir, batch_size, height, width, seq_len, gray_scale):
+
+def get_local_candidate_dataset(df_path, img_dir, batch_size, dtype_, height, width, seq_len, gray_scale):
     df = pd.read_csv(df_path)
     df = df.rename(columns={'normed_InChI': 'InChI'})
     df = df[['image_id', 'InChI']]
 
     file_paths = df['image_id'].map(
         lambda x: f'{img_dir}/{x}.png').tolist()
-    labels = df['InChI'].swifter.apply(tokenizer.tokenize).tolist()
+    labels = df['InChI'].apply(tokenizer.tokenize).tolist()
 
     ds = tf.data.Dataset.from_tensor_slices((file_paths, labels))
+
     def _read_func(file_name, label):
         return read_local_image(file_name, label, height, width, seq_len, gray_scale)
     ds = ds.map(_read_func, num_parallel_calls=AUTO)
     ds = ds.batch(batch_size, drop_remainder=False)
-    ds = ds.map(imagenet_normalize, num_parallel_calls=AUTO)
+    ds = ds.map(lambda x, y: imagenet_normalize(
+        x, y, dtype_), num_parallel_calls=AUTO)
     ds = ds.prefetch(1)
     ds_len = len(df)
 
