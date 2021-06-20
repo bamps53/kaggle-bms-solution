@@ -22,7 +22,7 @@ import torch
 import wandb
 from tensorflow.keras.mixed_precision import experimental as mixed_precision
 # from kaggle_datasets import KaggleDatasets
-from tqdm.notebook import tqdm
+from tqdm.auto import tqdm
 
 # seed everything
 SEED = 42

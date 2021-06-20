@@ -5,7 +5,7 @@ import tensorflow as tf
 from tensorflow.python.keras.backend import update
 import wandb
 
-from tqdm.notebook import tqdm
+from tqdm.auto import tqdm
 
 from lib.model import create_decoder_mask
 

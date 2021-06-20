@@ -16,7 +16,7 @@ import tensorflow as tf
 import tensorflow_addons as tfa
 import wandb
 from tensorflow.keras.mixed_precision import experimental as mixed_precision
-from tqdm.notebook import tqdm
+from tqdm.auto import tqdm
 
 # seed everything
 SEED = 42
