@@ -101,7 +101,7 @@ class FocalLossForRescore(tf.keras.losses.Loss):
         self.num_classes = num_classes
         self._alpha = alpha
         self._gamma = gamma
-        super(FocalLoss, self).__init__(reduction=reduction, name=name)
+        super(FocalLossForRescore, self).__init__(reduction=reduction, name=name)
 
     def call(self, y_true, y_pred):
         """Invokes the `FocalLoss`.
